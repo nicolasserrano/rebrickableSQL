@@ -82,6 +82,21 @@ function readTable(tableName, prefix) {
             db_tables[prefix + tableName] = alasql("SELECT * FROM " + prefix + tableName);
         }).catch(console.error);
 }
+function readTable5(tableName, tableName1,tableName2,tableName3,tableName4,tableName5, prefix) {
+    if (prefix == null) prefix = "";
+     alasql(['DROP TABLE IF EXISTS ' + prefix + tableName,
+        'CREATE TABLE ' + prefix + tableName,
+        'SELECT * INTO ' + prefix + tableName+ ' FROM CSV("' + tableName1 + '",{headers:true})',
+        'SELECT * INTO ' + prefix + tableName+ ' FROM CSV("' + tableName2 + '",{headers:true})',
+        'SELECT * INTO ' + prefix + tableName+ ' FROM CSV("' + tableName3 + '",{headers:true})',
+        'SELECT * INTO ' + prefix + tableName+ ' FROM CSV("' + tableName4 + '",{headers:true})',
+        'SELECT * INTO ' + prefix + tableName+ ' FROM CSV("' + tableName5 + '",{headers:true})'
+        ]).then (function(results){
+            console.log(results);
+            console.log(alasql("SELECT * FROM " + prefix + tableName))
+            db_tables[prefix + tableName] = alasql("SELECT * FROM " + prefix + tableName);
+        }).catch(console.error);
+}
 
 readTable("themes");
 readTable("colors");
@@ -92,7 +107,7 @@ readTable("elements");
 readTable("sets", "Lego_");
 readTable("minifigs");
 readTable("inventories");
-readTable("inventory_parts");
+readTable5("inventory_parts", "inventory_parts_1", "inventory_parts_2", "inventory_parts_3", "inventory_parts_4", "inventory_parts_5");
 readTable("inventory_sets");
 readTable("inventory_minifigs");
 
