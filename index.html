@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html><head></head><body>
+
+Content form <a href="https://rebrickable.com/downloads/">Rebrickable</a>
+Content:
+
+<ul class="list-unstyled">
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/themes.csv.gz?1663920480.3643284">themes.csv.gz</a> (3.8&nbsp;KB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/colors.csv.gz?1663920480.5643284">colors.csv.gz</a> (2.4&nbsp;KB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/part_categories.csv.gz?1663920480.8363287">part_categories.csv.gz</a> (725&nbsp;bytes)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/parts.csv.gz?1663920481.4563293">parts.csv.gz</a> (798.0&nbsp;KB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/part_relationships.csv.gz?1663920488.9843357">part_relationships.csv.gz</a> (140.9&nbsp;KB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/elements.csv.gz?1663920481.8563297">elements.csv.gz</a> (516.9&nbsp;KB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/sets.csv.gz?1663920482.7083304">sets.csv.gz</a> (356.3&nbsp;KB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/minifigs.csv.gz?1663920483.1123307">minifigs.csv.gz</a> (212.6&nbsp;KB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/inventories.csv.gz?1663920482.28433">inventories.csv.gz</a> (182.7&nbsp;KB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/inventory_parts.csv.gz?1663920487.9523346">inventory_parts.csv.gz</a> (9.4&nbsp;MB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/inventory_sets.csv.gz?1663920488.2843351">inventory_sets.csv.gz</a> (12.9&nbsp;KB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+<li>
+<span><a href="https://cdn.rebrickable.com/media/downloads/inventory_minifigs.csv.gz?1663920488.6203353">inventory_minifigs.csv.gz</a> (72.8&nbsp;KB)</span>
+<span class="pull-right"><small>Sept. 23, 2022, 8:08 a.m.</small></span>
+</li>
+</ul>
+
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/alasql@1.7"> -->
+<script src="alasql.js"></script>
+<script>
+
+/*
+alasql("DROP TABLE IF EXISTS LEGO_sets");
+alasql("CREATE TABLE LEGO_sets");
+alasql('SELECT * INTO LEGO_sets FROM CSV("sets.csv",{headers:true})');
+
+alasql("DROP TABLE IF EXISTS themes");
+alasql("CREATE TABLE themes");
+alasql('SELECT * INTO themes FROM CSV("themes.csv",{headers:true})');
+*/
+
+db_tables = [];
+function readTable(tableName, prefix) {
+    if (prefix == null) prefix = "";
+     alasql(['DROP TABLE IF EXISTS ' + prefix + tableName,
+        'CREATE TABLE ' + prefix + tableName,
+        'SELECT * INTO ' + prefix + tableName+ ' FROM CSV("' + tableName + '",{headers:true})'
+        ]).then (function(results){
+            console.log(results);
+            console.log(alasql("SELECT * FROM " + prefix + tableName))
+            db_tables[prefix + tableName] = alasql("SELECT * FROM " + prefix + tableName);
+        }).catch(console.error);
+}
+
+readTable("themes");
+readTable("colors");
+readTable("part_categories");
+readTable("parts");
+readTable("part_relationships");
+readTable("elements");
+readTable("sets", "Lego_");
+readTable("minifigs");
+readTable("inventories");
+readTable("inventory_parts");
+readTable("inventory_sets");
+readTable("inventory_minifigs");
+
+function sql(sqlStatement) {
+    res = alasql(sqlStatement)
+    //console.log(res)
+    console.table(res.slice(0,6))
+    return res;
+}
+
+//sql("SELECT A.name as theme_name, B.name as parent_name  FROM themes A, themes B where A.parent_id = B.id AND name like '%tar%'")
+</script>
+sql("SELECT * FROM colors WHERE id < 8")
+
+
+</body></html>
